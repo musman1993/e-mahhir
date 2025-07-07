@@ -1,10 +1,35 @@
-# Python-generated files
+# Python artifacts
 __pycache__/
-*.py[oc]
-build/
-dist/
-wheels/
-*.egg-info
+*.py[cod]
+*.sqlite3
+*.log
+.env
+
+# uv
+uv/
 
 # Virtual environments
-.venv
+.venv/
+env/
+venv/
+__pypackages__/
+
+# Docker
+*.pid
+*.sock
+docker-compose.override.yml
+
+# IDEs
+.vscode/
+.idea/
+.DS_Store
+
+# Test and coverage
+htmlcov/
+.tox/
+.coverage
+coverage.xml
+pytest_cache/
+
+# Local development
+.env.*
