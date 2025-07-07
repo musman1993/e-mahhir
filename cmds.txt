@@ -1,0 +1,17 @@
+create venv:  python -m venv .venv
+activate it: .venv\Scripts\activate
+uv pip install -r requirements.txt
+
+then run: py main.py
+
+DO THIS AFTER INSTALLING NEW PACKAGE: 
+uv pip install -r requirements.txt
+OR 
+no need to do this if you are not prefering pyproject.toml
+lock uv.lock file again using: uv pip compile pyproject.toml --all-extras --generate-hashes 
+
+for docker: 
+
+build the docker: docker build -t e-mahhir-be .
+
+run the container: docker run -d -p 8000:8000 e-mahhir-be
