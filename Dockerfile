@@ -1,14 +1,24 @@
-FROM python:3.9-slim
+# Use official Python slim image
+FROM python:3.13-slim
 
-# Install uv.
+# Install uv from the official container
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
-# Copy the application into the container.
-COPY . /app
-
-# Install the application dependencies.
+# Set workdir
 WORKDIR /app
-RUN uv sync --frozen --no-cache
 
-# Run the application.
-CMD ["/app/.venv/bin/fastapi", "run", "app/main.py", "--port", "8003", "--host", "0.0.0.0", "--reload"]
+# Copy only the lock and pyproject first, for layer caching
+COPY pyproject.toml ./
+COPY uv.lock ./
+
+# Install Python deps into system
+RUN uv pip install --system --no-cache --editable .
+
+# Copy the rest of your app
+COPY . .
+
+# Expose port
+EXPOSE 8000
+
+# Run the app with uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload", "--reload-dir", "app"]
