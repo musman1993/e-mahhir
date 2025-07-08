@@ -1,17 +1,18 @@
 create venv:  python -m venv .venv
 activate it: .venv\Scripts\activate
-uv pip install -r requirements.txt
+
+uv pip add pkg_name
+uv pip install --system --no-cache .
 
 then run: py main.py
 
-DO THIS AFTER INSTALLING NEW PACKAGE: 
-uv pip install -r requirements.txt
-OR 
-no need to do this if you are not prefering pyproject.toml
 lock uv.lock file again using: uv pip compile pyproject.toml --all-extras --generate-hashes 
 
-for docker: 
-
+do this if you want no update on real time for docker: 
 build the docker: docker build -t e-mahhir-be .
-
 run the container: docker run -d -p 8000:8000 e-mahhir-be
+
+docker run -d -p 8000:8000 -v "${PWD}/app:/app/app" e-mahhir-be uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+now only run this: docker compose up --build
+
