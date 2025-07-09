@@ -1,0 +1,45 @@
+# Python caches
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+env/
+venv/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# IDE settings
+.vscode/
+.idea/
+
+# Build / test / coverage artifacts
+*.egg-info/
+*.egg
+*.log
+*.coverage
+htmlcov/
+.tox/
+.coverage
+.pytest_cache/
+dist/
+build/
+*.tar.gz
+*.whl
+
+# Docker-related
+Dockerfile
+docker-compose.yml
+
+# Build artifacts
+build/
+*.egg-info/

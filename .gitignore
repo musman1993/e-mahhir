@@ -5,6 +5,10 @@ __pycache__/
 *.log
 .env
 
+# Build artifacts
+build/
+*.egg-info/
+
 # uv
 uv/
 
@@ -18,6 +22,7 @@ __pypackages__/
 *.pid
 *.sock
 docker-compose.override.yml
+docker-compose.yml
 
 # IDEs
 .vscode/
