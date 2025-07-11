@@ -14,7 +14,7 @@ uv/
 
 # Virtual environments
 .venv/
-env/
+
 venv/
 __pypackages__/
 
@@ -36,5 +36,3 @@ htmlcov/
 coverage.xml
 pytest_cache/
 
-# Local development
-.env.*
