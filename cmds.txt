@@ -15,4 +15,3 @@ run the container: docker run -d -p 8000:8000 e-mahhir-be
 docker run -d -p 8000:8000 -v "${PWD}/app:/app/app" e-mahhir-be uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 now only run this: docker compose up --build
-
