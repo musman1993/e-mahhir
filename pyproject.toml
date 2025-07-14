@@ -5,9 +5,25 @@ description = "e-mahhir backend system"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "fastapi[standard]>=0.115.14",
-    "sqlalchemy[asyncio]>=2.0",
-    "asyncpg>=0.29.0",
-    "python-dotenv>=1.0.1",
-    "loguru"
+    "fastapi[standard]>=0.111.0",  # Latest FastAPI (as of July 2024)
+    "sqlalchemy[asyncio]>=2.0.30",  # SQLAlchemy 2.0.30
+    "asyncpg>=0.29.0",  # Latest asyncpg
+    "python-dotenv>=1.0.1",  # Latest python-dotenv
+    "loguru>=0.7.2",  # Latest loguru
+    "sqlmodel>=0.0.16",  # Latest SQLModel
+    "uvicorn>=0.29.0",  # Latest uvicorn
+    "pydantic>=2.7.1",  # Pydantic V2
+    "python-jose>=3.3.0",  # Latest python-jose
+    "passlib[bcrypt]>=1.7.4",  # Latest passlib
+    "pydantic-settings>=2.0",
+    "aiosmtplib>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2.1",  # Latest pytest
+    "httpx>=0.27.0",  # Latest httpx
+    "pytest-asyncio>=0.23.7",  # Latest pytest-asyncio
+    "black>=24.4.2",  # Latest black
+    "isort>=5.13.2",  # Latest isort
 ]
