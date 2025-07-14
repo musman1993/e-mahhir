@@ -11,11 +11,17 @@ WORKDIR /app
 COPY pyproject.toml ./
 COPY uv.lock ./
 
-# Install Python deps into system
-RUN uv pip install --system --no-cache --editable .
 
 # Copy the rest of your app
 COPY . .
+
+# Install Python deps into system
+# RUN uv pip install --system --no-cache --editable .
+RUN uv pip install --system --no-cache ".[dev]"
+
+# Install dev dependencies
+# RUN pip install --upgrade pip \
+#     && pip install .[dev]
 
 # Expose port
 EXPOSE 8000

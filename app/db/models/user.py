@@ -4,6 +4,7 @@ from sqlalchemy.sql import func
 from app.db.base import Base
 import uuid
 from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.orm import relationship
 
 user_role = ENUM(
     'super-admin',
@@ -47,3 +48,5 @@ class User(Base):
         nullable=False,
     )
     soft_delete_flag = Column(Boolean, nullable=True)
+    customer = relationship("Customer", back_populates="user", uselist=False)
+    

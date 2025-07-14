@@ -10,13 +10,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.session import engine, init_db
 from app.db.base import Base
-from app.api.v1.routes import auth, user, tenant, role
+from app.api.v1.routes import auth, user, tenant
 from app.core.security import get_current_user
 from contextlib import asynccontextmanager
 import asyncio
 
 logger.add("stdout", format="{time} {level} {message}", level="INFO")
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

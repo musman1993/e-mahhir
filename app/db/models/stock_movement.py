@@ -25,6 +25,13 @@ class StockMovement(Base):
     approved_by_employee_id = Column(UUID(as_uuid=True), ForeignKey("employee.id"), nullable=True)
     requested_by_employee_id = Column(UUID(as_uuid=True), ForeignKey("employee.id"), nullable=True)
     approved_at = Column(DateTime(timezone=True), nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),  # ✅ default on INSERT
+        onupdate=func.now(),  # ✅ updates automatically on UPDATE
+        nullable=False,
+    )
     soft_delete_flag = Column(Boolean, nullable=True)

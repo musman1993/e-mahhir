@@ -30,7 +30,7 @@ class StockMovementOut(StockMovementBase):
     requested_by_employee_id: UUID
     approved_at: Optional[datetime] = None
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

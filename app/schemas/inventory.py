@@ -35,7 +35,7 @@ class InventoryItemOut(InventoryItemBase):
     is_damaged: bool = False
     is_disposed: bool = False
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

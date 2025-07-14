@@ -4,7 +4,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from uuid import UUID
 from app.db.models.tenant import Tenant
-from .user import get_user_by_id
 
 
 async def create_tenant(db: AsyncSession, tenant_data: dict):
@@ -14,7 +13,7 @@ async def create_tenant(db: AsyncSession, tenant_data: dict):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Missing 'created_by' in tenant data.",
         )
-
+    from .user import get_user_by_id
     user = await get_user_by_id(db, created_by_id)
     if not user:
         raise HTTPException(

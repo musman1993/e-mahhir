@@ -36,7 +36,7 @@ class CustomerProductOut(CustomerProductBase):
     received_date: datetime
     estimated_delivery_date: datetime
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True

@@ -42,7 +42,7 @@ class UserOutInDetail(BaseModel):
     otp_expiry: Optional[datetime] = None
     invited_by: Optional[UUID] = None
     created_at: datetime
-    updated_at: datetime
+    updated_at: Optional[datetime] = None
     soft_delete_flag: Optional[bool] = None
 
     class Config:

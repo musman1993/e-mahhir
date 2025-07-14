@@ -20,6 +20,13 @@ class InventoryItem(Base):
     is_returnable = Column(Boolean, nullable=True)
     is_damaged = Column(Boolean, nullable=True)
     is_disposed = Column(Boolean, nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),  # ✅ default on INSERT
+        onupdate=func.now(),  # ✅ updates automatically on UPDATE
+        nullable=False,
+    )
     soft_delete_flag = Column(Boolean, nullable=True)

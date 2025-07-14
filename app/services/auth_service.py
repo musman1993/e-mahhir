@@ -13,7 +13,7 @@ from app.db.session import AsyncSession
 from app.core.config import settings
 from app.core.email_utils import send_email
 from datetime import datetime, timezone, timedelta
-
+from app.utils.db import get_or_404
 
 async def authenticate_user(db: AsyncSession, login_data: UserLogin):
     user = await get_user_by_email(db, login_data.email)
@@ -33,12 +33,10 @@ async def authenticate_user(db: AsyncSession, login_data: UserLogin):
         "token_type": "bearer",
     }
 
-
 async def decode_token_get_user(db: AsyncSession, token: str):
     payload = decode_access_token(token)
     user_id = payload["sub"]
     return await get_user_by_id(db, user_id)
-
 
 async def register_user(db: AsyncSession, user_data: UserRegister):
     # Normalize role for comparison
@@ -74,9 +72,7 @@ async def register_user(db: AsyncSession, user_data: UserRegister):
     return user
 
 async def send_otp(db: AsyncSession, email: str):
-    user = await get_user_by_email(db, email)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = await get_or_404(get_user_by_email(db), entity_name="User")
 
     otp = generate_otp()
     await set_user_otp(db, user.id, otp)
@@ -92,11 +88,8 @@ async def send_otp(db: AsyncSession, email: str):
 
     return {"message": "OTP sent successfully"}
 
-
 async def verify_otp(db: AsyncSession, otp_data: VerifyOTP):
-    user = await get_user_by_email(db, otp_data.email)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
+    user = await get_or_404(get_user_by_email(db), entity_name="User")
 
     if user.otp_code != otp_data.otp:
         raise HTTPException(status_code=400, detail="Invalid OTP")

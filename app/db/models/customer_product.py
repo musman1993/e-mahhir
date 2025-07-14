@@ -28,6 +28,13 @@ class CustomerProduct(Base):
     received_date = Column(DateTime(timezone=True), nullable=True)
     estimated_delivery_date = Column(DateTime(timezone=True), nullable=True)
     status = Column(customer_product_status, server_default='received')
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    created_at = Column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),  # ✅ default on INSERT
+        onupdate=func.now(),  # ✅ updates automatically on UPDATE
+        nullable=False,
+    )
     soft_delete_flag = Column(Boolean, nullable=True)
