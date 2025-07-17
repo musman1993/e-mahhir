@@ -1,37 +1,27 @@
-from sqlalchemy import Column, String, Boolean, UUID, DateTime, Integer, ForeignKey, text
+import enum
+from sqlalchemy import Column, Enum as SQLEnum, Integer, DateTime, Text, ForeignKey
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import ENUM
 from app.db.base import Base
 import uuid
 
-stock_movement_type = ENUM(
-    'add',
-    'remove',
-    'transfer',
-    name='stock_movement_type',
-    # create_type=False
-)
+class MovementTypeEnum(enum.Enum):
+    in_ = "in"
+    out = "out"
+    adjustment = "adjustment"
 
 class StockMovement(Base):
     __tablename__ = "stock_movement"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"))
-    tenant_id = Column(UUID(as_uuid=True), ForeignKey("tenant.id"), nullable=True)
-    inventory_item_id = Column(UUID(as_uuid=True), ForeignKey("inventory_item.id"), nullable=True)
-    movement_type = Column(stock_movement_type, server_default='add')
-    quantity = Column(Integer, nullable=True)
-    from_location = Column(String, nullable=True)
-    to_location = Column(String, nullable=True)
-    approved_by_employee_id = Column(UUID(as_uuid=True), ForeignKey("employee.id"), nullable=True)
-    requested_by_employee_id = Column(UUID(as_uuid=True), ForeignKey("employee.id"), nullable=True)
-    approved_at = Column(DateTime(timezone=True), nullable=True)
-    created_at = Column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    inventory_product_id = Column(UUID(as_uuid=True), ForeignKey("inventory_product.id"), nullable=False)
+    # Use SQLEnum wrapper
+    movement_type = Column(
+        SQLEnum(MovementTypeEnum, name="movementtypeenum"),
+        nullable=False
     )
-    updated_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),  # ✅ default on INSERT
-        onupdate=func.now(),  # ✅ updates automatically on UPDATE
-        nullable=False,
-    )
-    soft_delete_flag = Column(Boolean, nullable=True)
+    quantity = Column(Integer, nullable=False)
+    movement_date = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    reason = Column(Text, nullable=True)
+    performed_by_employee_id = Column(UUID(as_uuid=True), ForeignKey("tenant_employee.id"), nullable=True)
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)

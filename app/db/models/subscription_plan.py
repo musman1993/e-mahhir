@@ -1,27 +1,19 @@
-from sqlalchemy import Column, String, Boolean, UUID, DateTime, Numeric, Integer, text
-from sqlalchemy.sql import func
+from sqlalchemy import Column, String, Boolean, DateTime, Text, Integer, DECIMAL
+from sqlalchemy.dialects.postgresql import UUID, JSONB
 from app.db.base import Base
 import uuid
+from sqlalchemy.sql import func
 
 class SubscriptionPlan(Base):
     __tablename__ = "subscription_plan"
-
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, server_default=text("gen_random_uuid()"))
-    name = Column(String, nullable=True)
-    description = Column(String, nullable=True)
-    monthly_price = Column(Numeric, nullable=True)
-    yearly_price = Column(Numeric, nullable=True)
-    max_users = Column(Integer, nullable=True)
-    max_inventory_items = Column(Integer, nullable=True)
-    max_customer_products = Column(Integer, nullable=True)
-    max_notifications_per_month = Column(Integer, nullable=True)
-    is_active = Column(Boolean, nullable=True)
-    created_at = Column(
-        DateTime(timezone=True), server_default=func.now(), nullable=False
-    )
-    updated_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now(),  # ✅ default on INSERT
-        onupdate=func.now(),  # ✅ updates automatically on UPDATE
-        nullable=False,
-    )
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    plan_name = Column(String(100), nullable=False, unique=True)
+    description = Column(Text, nullable=True)
+    monthly_price = Column(DECIMAL(10, 2), nullable=False)
+    annual_price = Column(DECIMAL(10, 2), nullable=True)
+    features = Column(JSONB, nullable=True)
+    max_employees = Column(Integer, nullable=True)
+    max_products = Column(Integer, nullable=True)
+    is_active = Column(Boolean, nullable=False, server_default="true")
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)

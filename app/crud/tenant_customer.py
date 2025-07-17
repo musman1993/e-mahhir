@@ -1,55 +1,29 @@
-# app/crud/tenant_customer.py
-from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, update, delete
 from uuid import UUID
 from app.db.models.tenant_customer import TenantCustomer
-from app.db.models.customer import Customer
-from sqlalchemy.orm import selectinload
+from app.schemas.tenant_customer import TenantCustomerCreate, TenantCustomerRead
 
-
-async def create_tenant_customer(db: AsyncSession, tenant_customer_data: dict):
-    db_tenant = TenantCustomer(**tenant_customer_data)
-    db.add(db_tenant)
+async def create_tenant_customer(db: AsyncSession, customer_in: TenantCustomerCreate) -> TenantCustomer:
+    db_customer = TenantCustomer(**customer_in)
+    db.add(db_customer)
     await db.commit()
-    await db.refresh(db_tenant)
-    return db_tenant
+    await db.refresh(db_customer)
+    return db_customer
 
-
-async def get_tenant_customer_by_id(db: AsyncSession, tenant_customer_id: UUID):
-    result = await db.execute(
-        select(TenantCustomer)
-        .options(selectinload(TenantCustomer.customer))
-        .where(TenantCustomer.id == tenant_customer_id)
-    )
+async def get_tenant_customer(db: AsyncSession, customer_id: UUID) -> TenantCustomer | None:
+    result = await db.execute(select(TenantCustomer).where(TenantCustomer.id == customer_id))
     return result.scalars().first()
 
-
-async def get_all_tenant_customers(db: AsyncSession, tenant_id: str, skip: int = 0, limit: int = 100):
-    result = await db.execute(
-        select(TenantCustomer)
-        .options(
-            selectinload(TenantCustomer.customer).selectinload(Customer.user)
-        )
-        .where(TenantCustomer.tenant_id == tenant_id)
-        .offset(skip)
-        .limit(limit)
-    )
+async def get_tenant_customers(db: AsyncSession) -> list[TenantCustomer]:
+    result = await db.execute(select(TenantCustomer))
     return result.scalars().all()
 
+async def update_tenant_customer(db: AsyncSession, customer_id: UUID, customer_in: TenantCustomerCreate) -> TenantCustomer | None:
+    await db.execute(update(TenantCustomer).where(TenantCustomer.id == customer_id).values(**customer_in))
+    await db.commit()
+    return await get_tenant_customer(db, customer_id)
 
-async def update_tenant(db: AsyncSession, tenant_customer_id: UUID, update_data: dict):
-    db_tenant = await get_tenant_customer_by_id(db, tenant_customer_id)
-    if db_tenant:
-        for key, value in update_data.items():
-            setattr(db_tenant, key, value)
-        await db.commit()
-        await db.refresh(db_tenant)
-    return db_tenant
-
-async def delete_tenant_customer(db: AsyncSession, tenant_customer_id: UUID):
-    db_tenant = await get_tenant_customer_by_id(db, tenant_customer_id)
-    if db_tenant:
-        await db.delete(db_tenant)
-        await db.commit()
-    return db_tenant
+async def delete_tenant_customer(db: AsyncSession, customer_id: UUID) -> None:
+    await db.execute(delete(TenantCustomer).where(TenantCustomer.id == customer_id))
+    await db.commit()

@@ -1,35 +1,31 @@
+
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
 from uuid import UUID
+from datetime import datetime
 from enum import Enum
 
-class NotificationChannel(str, Enum):
-    email = "email"
-    sms = "sms"
-    whatsapp = "whatsapp"
-
-class NotificationStatus(str, Enum):
-    pending = "pending"
-    sent = "sent"
-    failed = "failed"
+class NotificationTypeEnum(str, Enum):
+    complaint_update = "complaint_update"
+    new_order = "new_order"
+    subscription_expiry = "subscription_expiry"
+    other = "other"
 
 class NotificationBase(BaseModel):
-    user_id: UUID
-    channel: NotificationChannel
-    template_name: str
+    recipient_app_user_id: UUID | None = None
+    recipient_app_customer_id: UUID | None = None
+    recipient_tenant_employee_id: UUID | None = None
+    tenant_id: UUID | None = None
+    type: NotificationTypeEnum
+    message: str
+    is_read: bool = False
 
 class NotificationCreate(NotificationBase):
-    payload: dict
+    pass
 
-class NotificationOut(NotificationBase):
+class NotificationRead(NotificationBase):
     id: UUID
-    tenant_id: UUID
-    payload: dict
-    status: NotificationStatus
-    error_message: Optional[str] = None
-    sent_at: Optional[datetime] = None
     created_at: datetime
+    updated_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True

@@ -1,27 +1,25 @@
-# app/schemas/tenant.py
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
 from uuid import UUID
+from datetime import datetime
 
 class TenantBase(BaseModel):
-    name: str
-    domain: str
-    created_by: UUID
+    app_user_id: UUID
+    tenant_name: str
+    business_type: str | None = None
+    address: str | None = None
+    phone_number: str | None = None
+    email: str | None = None
+    website: str | None = None
     is_active: bool = True
+    setup_completed: bool = False
 
 class TenantCreate(TenantBase):
     pass
 
-class TenantUpdate(BaseModel):
-    name: Optional[str] = None
-    domain: Optional[str] = None
-    is_active: Optional[bool] = None
-
-class TenantOut(TenantBase):
+class TenantRead(TenantBase):
     id: UUID
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True

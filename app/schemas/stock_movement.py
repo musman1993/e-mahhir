@@ -1,36 +1,29 @@
+
 from pydantic import BaseModel
-from datetime import datetime
-from typing import Optional
 from uuid import UUID
+from datetime import datetime
 from enum import Enum
 
-class StockMovementType(str, Enum):
-    add = "add"
-    remove = "remove"
-    transfer = "transfer"
+class MovementTypeEnum(str, Enum):
+    in_ = "in"
+    out = "out"
+    adjustment = "adjustment"
 
 class StockMovementBase(BaseModel):
-    inventory_item_id: UUID
-    movement_type: StockMovementType
+    inventory_product_id: UUID
+    movement_type: MovementTypeEnum
     quantity: int
-    to_location: str
+    movement_date: datetime | None = None
+    reason: str | None = None
+    performed_by_employee_id: UUID | None = None
 
 class StockMovementCreate(StockMovementBase):
-    from_location: Optional[str] = None
+    pass
 
-class StockMovementUpdate(BaseModel):
-    approved_by_employee_id: Optional[UUID] = None
-    approved_at: Optional[datetime] = None
-
-class StockMovementOut(StockMovementBase):
+class StockMovementRead(StockMovementBase):
     id: UUID
-    tenant_id: UUID
-    from_location: Optional[str] = None
-    approved_by_employee_id: Optional[UUID] = None
-    requested_by_employee_id: UUID
-    approved_at: Optional[datetime] = None
     created_at: datetime
-    updated_at: Optional[datetime] = None
+    updated_at: datetime
 
     class Config:
-        from_attributes = True
+        orm_mode = True

@@ -10,7 +10,6 @@ async def get_all_tenant_admins(db: AsyncSession):
     users = await get_or_404(get_all_tenant_admins_(db), entity_name="Tenant Admins")
     return users
 
-
 async def get_all_users(db: AsyncSession):
     users = await get_or_404(get_all_users_(db), entity_name="Users")
     return users

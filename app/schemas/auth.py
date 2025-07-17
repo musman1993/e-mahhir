@@ -1,36 +1,29 @@
-from pydantic import BaseModel, EmailStr, Field
-from datetime import datetime
-from typing import Optional
-from uuid import UUID
 
-class Token(BaseModel):
-    access_token: str
-    token_type: str
+from pydantic import BaseModel, EmailStr
+from enum import Enum
+from typing import Any
 
-class TokenData(BaseModel):
-    id: str | None = None
-    tenant_id: UUID | None = None
 
-class UserLogin(BaseModel):
+class UserTypeEnum(str, Enum):
+    app_user = "app_user"
+    app_customer = "app_customer"
+    tenant_employee = "tenant_employee"
+
+class AuthLogin(BaseModel):
     email: EmailStr
     password: str
-    tenant_id: UUID | None = None
+    user_type: UserTypeEnum
 
-class UserRegister(BaseModel):
+class AuthRegister(BaseModel):
     email: EmailStr
-    password: str = Field(..., min_length=8)
-    display_name: str
-    phone: str | None = None
-    role: str
-    tenant_id: UUID | None = None
+    password: str
+    user_type: UserTypeEnum
+    full_name: str | None = None
+    phone_number: str | None = None
+    address: str | None = None  # Only for app_customer
+    tenant_id: str | None = None # Only for tenant_employee
 
-class VerifyOTP(BaseModel):
-    email: EmailStr
-    otp: str = Field(..., min_length=6, max_length=6)
-
-class ResetPasswordRequest(BaseModel):
-    email: EmailStr
-
-class ResetPasswordConfirm(BaseModel):
-    token: str
-    new_password: str = Field(..., min_length=8)
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    # user: Any | None = None
